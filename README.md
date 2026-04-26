@@ -449,6 +449,187 @@ flowchart TD
 ```
 
 ---
+### **Multi-Dimensional Response Evaluation**
+
+The system uses a sophisticated **NLP-based scoring mechanism** to evaluate candidate responses:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│           RESPONSE EVALUATION PIPELINE                       │
+└─────────────────────────────────────────────────────────────┘
+
+INPUT: Candidate Response + Question Context
+   │
+   ├─► 1. RELEVANCE SCORING (30% weight)
+   │   ├─ Semantic similarity to question (sentence-transformers)
+   │   ├─ Cosine distance threshold: 0.7
+   │   └─ Score: 0.0 - 1.0
+   │
+   ├─► 2. DEPTH SCORING (35% weight)
+   │   ├─ Specificity detection (keywords: "example", "project", "implemented")
+   │   ├─ Response length (minimum 100 chars for medium score)
+   │   ├─ Evidence tag extraction (7 categories):
+   │   │  ├─ specific: "In my project at X company..."
+   │   │  ├─ project: "Built a Django REST API..."
+   │   │  ├─ experience: "5 years working with..."
+   │   │  ├─ metrics: "Improved performance by 40%..."
+   │   │  ├─ technical: "Used async/await patterns..."
+   │   │  ├─ team: "Led a team of 3 engineers..."
+   │   │  └─ learning: "Studied O'Reilly books on..."
+   │   └─ Score: 0.0 - 1.0
+   │
+   ├─► 3. CLARITY SCORING (20% weight)
+   │   ├─ Structure analysis (coherent paragraphs)
+   │   ├─ Signal phrases ("First", "Additionally", "Therefore")
+   │   ├─ Sentence complexity (not too simple, not too complex)
+   │   └─ Score: 0.0 - 1.0
+   │
+   ├─► 4. CONFIDENCE SCORING (15% weight)
+   │   ├─ Certainty language detection
+   │   │  ├─ High: "I", "I built", "I implemented"
+   │   │  ├─ Medium: "We did", "We used"
+   │   │  └─ Low: "Maybe", "Could be", "Possibly"
+   │   ├─ Hedging language penalty: -0.2 for "probably", "somewhat"
+   │   └─ Score: 0.0 - 1.0
+   │
+   └─► FINAL QUALITY SCORE
+       ├─ Formula: (R×0.30) + (D×0.35) + (C×0.20) + (Con×0.15)
+       ├─ Range: 0.0 - 1.0
+       └─ Proficiency Level Mapping:
+           ├─ 0.0-0.2  → Level 1 (Beginner)
+           ├─ 0.2-0.4  → Level 2 (Basic)
+           ├─ 0.4-0.6  → Level 3 (Intermediate)
+           ├─ 0.6-0.8  → Level 4 (Advanced)
+           └─ 0.8-1.0  → Level 5 (Expert)
+
+OUTPUT: Quality Score + Proficiency Level + Evidence Tags
+```
+
+### **Proficiency Scoring Algorithm**
+
+For each skill, the system aggregates responses across multiple turns:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│        SKILL PROFICIENCY AGGREGATION (Multi-Turn)            │
+└─────────────────────────────────────────────────────────────┘
+
+Turn 1 (Conceptual): Q&A → Quality 0.7 → Evidence: [specific, learning]
+Turn 2 (Practical):  Q&A → Quality 0.8 → Evidence: [project, metrics, team]
+Turn 3 (Advanced):   Q&A → Quality 0.85 → Evidence: [technical, experience]
+
+   └─► AGGREGATION:
+       ├─ Average Quality Score: (0.7 + 0.8 + 0.85) / 3 = 0.783
+       ├─ Evidence Frequency Analysis:
+       │  ├─ project:3, technical:2, metrics:2, experience:1, etc.
+       │  └─ High presence = High confidence
+       └─ Proficiency Level Calculation:
+           ├─ Base Level: quality_score → level (0.783 → Level 4)
+           ├─ Confidence Adjustment:
+           │  ├─ Evidence < 3 tags: -0.1 (low confidence)
+           │  ├─ Evidence 3-5 tags: +0.0 (normal confidence)
+           │  └─ Evidence > 5 tags: +0.1 (high confidence)
+           └─ Final: Level 4 (Advanced) with 85% confidence
+```
+
+### **Gap Analysis & Severity Ranking**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│             GAP SEVERITY CALCULATION                         │
+└─────────────────────────────────────────────────────────────┘
+
+For each skill:
+├─ JD Required Level: 4 (Advanced)
+├─ Assessed Level: 2 (Basic)
+├─ Gap Level: 4 - 2 = 2 levels
+│
+└─► Severity Ranking:
+    ├─ Gap 3+ levels: CRITICAL (Priority 1) [Deep technical gaps]
+    ├─ Gap 2 levels: HIGH (Priority 2) [Major skill gaps]
+    ├─ Gap 1 level: MEDIUM (Priority 3) [Minor gaps]
+    └─ Gap 0 levels: ALIGNED (Priority 4) [Skill requirement met]
+
+ORDERING: Sorted by (gap_level DESC, confidence DESC)
+```
+
+### **Learning Plan Generation**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│         PERSONALIZED LEARNING PATH GENERATION                │
+└─────────────────────────────────────────────────────────────┘
+
+For each gap (ordered by priority):
+│
+├─► DURATION ESTIMATION:
+│   ├─ Gap 3+ levels: 8-12 weeks @ 20 hrs/week
+│   ├─ Gap 2 levels: 4-8 weeks @ 15 hrs/week
+│   ├─ Gap 1 level: 2-4 weeks @ 10 hrs/week
+│   └─ Total Plan Duration: Sum of all gaps
+│
+├─► MILESTONE BREAKDOWN:
+│   ├─ Week 1-2: Foundational concepts
+│   ├─ Week 3-4: Intermediate patterns
+│   ├─ Week 5-6: Advanced techniques
+│   └─ Week 7-8: Project-based mastery
+│
+├─► RESOURCE RECOMMENDATIONS:
+│   ├─ Courses: Udemy, Coursera (matched to skill)
+│   ├─ Books: Technical reads + practice guides
+│   ├─ Projects: Real-world implementations
+│   └─ Practice: LeetCode, HackerRank problems
+│
+└─► SUCCESS METRICS:
+    ├─ Weekly progress checkpoints
+    ├─ Mini-project completions
+    ├─ Practice problem pass rate
+    └─ Final assessment re-evaluation
+```
+
+### **Example Scoring Walkthrough**
+
+```
+CANDIDATE RESPONSE to "Describe your Python experience":
+
+"Over 5 years, I've built production Django APIs handling 
+1M+ requests/day. I implemented async/await patterns for 
+concurrency, reducing latency by 40%. Led a team of 3 junior 
+developers, mentoring them on Python best practices. Currently 
+studying advanced async patterns from O'Reilly books."
+
+EVALUATION:
+
+1. RELEVANCE (Semantic Similarity)
+   └─ Score: 0.92 (highly relevant to Python assessment)
+
+2. DEPTH ANALYSIS
+   ├─ Specificity: "1M+ requests/day", "40% reduction"
+   ├─ Evidence Tags: [project, experience, metrics, team, technical, learning]
+   ├─ Evidence Count: 6 (excellent)
+   └─ Score: 0.88
+
+3. CLARITY
+   ├─ Well-structured, logical flow
+   ├─ Clear signal phrases: "Over 5 years", "Led a team"
+   └─ Score: 0.85
+
+4. CONFIDENCE
+   ├─ High confidence language: "I've built", "I implemented"
+   ├─ No hedging: "Currently studying" = active learning
+   └─ Score: 0.90
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL CALCULATION:
+(0.92×0.30) + (0.88×0.35) + (0.85×0.20) + (0.90×0.15)
+= 0.276 + 0.308 + 0.170 + 0.135
+= 0.889
+
+RESULT: Level 4 (Advanced) | Confidence: 89%
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
 
 ## 🧠 How It Works
 
