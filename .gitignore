@@ -60,3 +60,4 @@ docker-compose.override.yml
 # OS
 .DS_Store
 Thumbs.db
+node_modules/
