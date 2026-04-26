@@ -18,8 +18,8 @@ export function StepBar({ step }) {
                 :          'bg-slate-800 border-slate-600 text-slate-500'}`}>
                 {done ? '✓' : idx}
               </div>
-              <span className={`text-xs mt-1 font-medium transition-colors duration-300
-                ${active ? 'text-purple-300' : done ? 'text-purple-500' : 'text-slate-600'}`}>
+              <span className={`text-xs mt-1 font-bold transition-colors duration-300
+                ${active ? 'text-purple-200' : done ? 'text-purple-400' : 'text-slate-400'}`}>
                 {label}
               </span>
             </div>

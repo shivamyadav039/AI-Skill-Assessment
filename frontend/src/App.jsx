@@ -80,7 +80,7 @@ function HomePage({ onStart }) {
           Prove Skills,<br />
           <span className="gradient-text">Not Just Claims</span>
         </h2>
-        <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
+        <p className="text-slate-200 text-lg max-w-2xl mx-auto mb-8 font-medium">
           AI-powered conversational assessment that tests real proficiency from any JD + Resume,
           then generates a personalized learning roadmap to close the gaps.
         </p>
@@ -88,7 +88,7 @@ function HomePage({ onStart }) {
           className="px-10 py-4 rounded-2xl font-bold text-white text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition transform hover:scale-105 shadow-xl shadow-purple-900/40 animate-pulse-glow">
           Start Free Assessment →
         </button>
-        <p className="text-slate-500 text-xs mt-4">No signup required · Powered by Google Gemini</p>
+        <p className="text-slate-300 text-sm mt-4 font-medium">No signup required · Powered by Google Gemini</p>
       </div>
 
       {/* Stats */}
@@ -96,20 +96,20 @@ function HomePage({ onStart }) {
         {stats.map((s, i) => (
           <div key={i} className="glass rounded-2xl p-5 text-center animate-fade-in-up">
             <div className={`text-3xl font-black mb-1 ${s.color}`}>{s.val}</div>
-            <div className="text-xs text-slate-400">{s.label}</div>
+            <div className="text-xs text-slate-200 font-semibold">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* How it works */}
       <div className="mb-12">
-        <h3 className="text-xl font-bold text-center mb-6 text-slate-300">How It Works</h3>
+        <h3 className="text-xl font-bold text-center mb-6 text-white">How It Works</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 stagger">
           {['Upload JD + Resume', 'AI Extracts Gaps', 'Live Interview', 'Get Roadmap'].map((t, i) => (
             <div key={i} className="glass rounded-xl p-5 text-center animate-fade-in-up relative overflow-hidden group hover:border-purple-500/40 transition border border-purple-500/10">
               <div className="text-3xl mb-3">{['📋','🔍','💬','🗺️'][i]}</div>
               <div className="text-xs font-bold text-purple-400 mb-1">Step {i+1}</div>
-              <div className="text-sm font-semibold text-slate-200">{t}</div>
+              <div className="text-sm font-bold text-white">{t}</div>
             </div>
           ))}
         </div>
@@ -121,8 +121,8 @@ function HomePage({ onStart }) {
           <div key={i} className="glass-light rounded-xl p-5 flex gap-4 animate-fade-in-up hover:border-purple-500/30 border border-transparent transition group">
             <div className="text-3xl flex-shrink-0 group-hover:scale-110 transition">{f.icon}</div>
             <div>
-              <h4 className="font-semibold mb-1 text-slate-200">{f.title}</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">{f.desc}</p>
+              <h4 className="font-bold mb-1 text-white">{f.title}</h4>
+              <p className="text-sm text-slate-200 leading-relaxed font-medium">{f.desc}</p>
             </div>
           </div>
         ))}
@@ -130,8 +130,8 @@ function HomePage({ onStart }) {
 
       {/* CTA banner */}
       <div className="glass rounded-2xl p-8 text-center border border-purple-500/20">
-        <h3 className="text-2xl font-bold mb-2">Ready to get started?</h3>
-        <p className="text-slate-400 text-sm mb-6">Load sample documents or paste your own JD + Resume in seconds</p>
+        <h3 className="text-2xl font-bold mb-2 text-white">Ready to get started?</h3>
+        <p className="text-slate-200 text-sm mb-6 font-medium">Load sample documents or paste your own JD + Resume in seconds</p>
         <button onClick={onStart}
           className="px-8 py-3 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white transition transform hover:scale-105">
           🚀 Launch Assessment
@@ -178,12 +178,12 @@ export default function App() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-slate-800 mt-16 py-6 text-center text-xs text-slate-600">
-          <p>Built by <a href="https://github.com/shivamyadav039" className="text-purple-500 hover:text-purple-400 transition">Shivam Yadav</a> · Powered by Google Gemini · FastAPI Backend</p>
-          <div className="flex justify-center gap-6 mt-3">
-            <a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition">API Docs</a>
-            <a href="http://localhost:8000/health" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition">Health</a>
-            <a href="https://github.com/shivamyadav039/AI-Skill-Assessment" target="_blank" rel="noopener noreferrer" className="hover:text-purple-400 transition">GitHub</a>
+        <footer className="border-t border-slate-700 mt-16 py-6 text-center text-sm text-slate-300">
+          <p>Built by <a href="https://github.com/shivamyadav039" className="text-purple-400 hover:text-purple-300 font-semibold transition">Shivam Yadav</a> · Powered by Google Gemini · FastAPI Backend</p>
+          <div className="flex justify-center gap-6 mt-3 font-medium">
+            <a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-purple-400 transition">API Docs</a>
+            <a href="http://localhost:8000/health" target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-purple-400 transition">Health</a>
+            <a href="https://github.com/shivamyadav039/AI-Skill-Assessment" target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-purple-400 transition">GitHub</a>
           </div>
         </footer>
       </div>

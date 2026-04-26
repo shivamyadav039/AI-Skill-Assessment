@@ -50,7 +50,7 @@ export default function UploadPage({ onNext }) {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold gradient-text mb-1">Upload Documents</h2>
-            <p className="text-slate-400 text-sm">Paste your JD and resume to begin AI-powered skill assessment</p>
+            <p className="text-slate-200 text-sm font-medium">Paste your JD and resume to begin AI-powered skill assessment</p>
           </div>
           <button onClick={useSample}
             className="text-xs bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 px-4 py-2 rounded-lg transition font-medium">
@@ -61,32 +61,32 @@ export default function UploadPage({ onNext }) {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Candidate Name */}
           <div>
-            <label className="block text-sm font-semibold text-slate-300 mb-2">👤 Candidate Name</label>
+            <label className="block text-sm font-bold text-white mb-2">👤 Candidate Name</label>
             <input value={name} onChange={e => setName(e.target.value)}
               placeholder="e.g. Shivam Yadav"
-              className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm" />
+              className="w-full bg-slate-800 border border-slate-500 rounded-xl px-4 py-3 text-white placeholder-slate-400 text-sm font-medium" />
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* JD */}
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-bold text-white mb-2">
                 📋 Job Description
-                <span className="ml-2 text-xs text-slate-500 font-normal">{jd.length} chars</span>
+                <span className="ml-2 text-xs text-slate-300 font-normal">{jd.length} chars</span>
               </label>
               <textarea value={jd} onChange={e => setJd(e.target.value)} rows={12}
                 placeholder="Paste the job description here..."
-                className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm" />
+                className="w-full bg-slate-800 border border-slate-500 rounded-xl px-4 py-3 text-white placeholder-slate-400 text-sm font-medium" />
             </div>
             {/* Resume */}
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-bold text-white mb-2">
                 📄 Resume / CV
-                <span className="ml-2 text-xs text-slate-500 font-normal">{resume.length} chars</span>
+                <span className="ml-2 text-xs text-slate-300 font-normal">{resume.length} chars</span>
               </label>
               <textarea value={resume} onChange={e => setResume(e.target.value)} rows={12}
                 placeholder="Paste your resume here..."
-                className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm" />
+                className="w-full bg-slate-800 border border-slate-500 rounded-xl px-4 py-3 text-white placeholder-slate-400 text-sm font-medium" />
             </div>
           </div>
 

@@ -113,7 +113,7 @@ export default function AssessmentPage({ session, onNext }) {
         {/* Sidebar — skill progress */}
         <div className="lg:col-span-1 space-y-3">
           <div className="glass rounded-xl p-4">
-            <h3 className="text-xs font-bold text-slate-400 uppercase mb-3">Skills</h3>
+            <h3 className="text-xs font-bold text-slate-200 uppercase mb-3">Skills</h3>
             <div className="space-y-2">
               {allSkills.map((skill, i) => {
                 const scored = scores[skill];
@@ -124,14 +124,14 @@ export default function AssessmentPage({ session, onNext }) {
                     ${active ? 'bg-purple-500/20 border border-purple-500/40' : 'glass-light'}
                     ${scored ? 'opacity-70' : ''}`}>
                     <div className="flex items-center justify-between gap-1">
-                      <span className={`font-medium truncate ${active ? 'text-purple-300' : 'text-slate-300'}`}>{skill}</span>
+                      <span className={`font-semibold truncate text-sm ${active ? 'text-purple-200' : 'text-white'}`}>{skill}</span>
                       {scored
                         ? <span className="text-xs font-bold text-green-400 flex-shrink-0">L{scored.assessed_level}</span>
                         : active
                           ? <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse flex-shrink-0" />
                           : <span className="text-slate-600 text-xs flex-shrink-0">—</span>}
                     </div>
-                    {isGap && <span className="text-xs text-orange-400">⚠ Gap</span>}
+                    {isGap && <span className="text-xs text-orange-300 font-semibold">⚠ Gap</span>}
                   </div>
                 );
               })}
@@ -141,7 +141,7 @@ export default function AssessmentPage({ session, onNext }) {
           {/* Turn counter */}
           {!done && (
             <div className="glass rounded-xl p-4 text-center">
-              <div className="text-xs text-slate-400 mb-1">Turn</div>
+              <div className="text-xs text-slate-200 mb-1 font-semibold">Turn</div>
               <div className="text-2xl font-bold gradient-text">{turnCount}<span className="text-slate-500 text-base">/5</span></div>
               <div className="w-full bg-slate-700 rounded-full h-1.5 mt-2">
                 <div className="h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
@@ -157,8 +157,8 @@ export default function AssessmentPage({ session, onNext }) {
           <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-700/50">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-lg">🤖</div>
             <div>
-              <p className="font-semibold text-sm">{done ? 'Assessment Complete' : `Assessing: ${currentSkill}`}</p>
-              <p className="text-xs text-slate-400">{done ? '🎉 All skills scored' : `Skill ${skillIndex + 1} of ${allSkills.length}`}</p>
+              <p className="font-bold text-sm text-white">{done ? 'Assessment Complete' : `Assessing: ${currentSkill}`}</p>
+              <p className="text-xs text-slate-200 font-medium">{done ? '🎉 All skills scored' : `Skill ${skillIndex + 1} of ${allSkills.length}`}</p>
             </div>
             {scoringSkill && (
               <div className="ml-auto flex items-center gap-2 text-xs text-yellow-400 animate-pulse">
@@ -202,7 +202,7 @@ export default function AssessmentPage({ session, onNext }) {
                 <textarea value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
                   rows={2} placeholder="Type your answer… (Enter to send, Shift+Enter for newline)"
                   disabled={sending || !!scoringSkill}
-                  className="flex-1 bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-2.5 text-white text-sm placeholder-slate-500 resize-none disabled:opacity-50" />
+                  className="flex-1 bg-slate-800 border border-slate-500 rounded-xl px-4 py-2.5 text-white text-sm placeholder-slate-400 resize-none disabled:opacity-50 font-medium" />
                 <button onClick={handleSend} disabled={sending || !input.trim() || !!scoringSkill}
                   className="w-12 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-40 rounded-xl flex items-center justify-center transition">
                   {sending

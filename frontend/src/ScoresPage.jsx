@@ -51,7 +51,7 @@ export default function ScoresPage({ session, scores: initialScores, onNext }) {
         </div>
         <div className="text-center sm:text-left">
           <h2 className="text-2xl font-bold gradient-text mb-1">Assessment Complete!</h2>
-          <p className="text-slate-400 text-sm mb-3">
+          <p className="text-slate-200 text-sm mb-3 font-medium">
             You scored across <strong className="text-white">{scoresList.length}</strong> skills with an average proficiency of
             <strong className="text-purple-300"> Level {avgLevel}</strong> ({levelLabel(Math.round(Number(avgLevel)))})
           </p>
@@ -73,7 +73,7 @@ export default function ScoresPage({ session, scores: initialScores, onNext }) {
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Skill score cards */}
         <div className="space-y-3">
-          <h3 className="font-bold text-slate-300 text-sm uppercase tracking-wide">Skill Scores</h3>
+          <h3 className="font-bold text-white text-sm uppercase tracking-wide">Skill Scores</h3>
           {loading
             ? [1,2,3].map(i => <Skeleton key={i} className="h-24 rounded-xl" />)
             : scoresList.length === 0
@@ -84,14 +84,14 @@ export default function ScoresPage({ session, scores: initialScores, onNext }) {
                   <ScoreRing score={s.assessed_level} size={72} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="font-semibold text-sm truncate">{skill}</p>
-                      <span className="text-xs text-slate-400 flex-shrink-0">{(s.confidence * 100).toFixed(0)}% conf.</span>
+                      <p className="font-bold text-sm text-white truncate">{skill}</p>
+                      <span className="text-xs text-slate-200 font-medium flex-shrink-0">{(s.confidence * 100).toFixed(0)}% conf.</span>
                     </div>
-                    <p className="text-xs text-purple-300 mb-2">{levelLabel(s.assessed_level)}</p>
+                    <p className="text-xs text-purple-300 font-bold mb-2">{levelLabel(s.assessed_level)}</p>
                     {/* Evidence tags */}
                     <div className="flex flex-wrap gap-1">
                       {(s.evidence_tags || []).slice(0, 3).map((t, j) => (
-                        <span key={j} className="text-xs bg-slate-700/60 text-slate-400 px-2 py-0.5 rounded-full">{t}</span>
+                        <span key={j} className="text-xs bg-slate-700 text-slate-200 px-2 py-0.5 rounded-full font-medium border border-slate-500">{t}</span>
                       ))}
                     </div>
                     {/* Confidence bar */}
@@ -106,7 +106,7 @@ export default function ScoresPage({ session, scores: initialScores, onNext }) {
 
         {/* Gap analysis */}
         <div className="space-y-3">
-          <h3 className="font-bold text-slate-300 text-sm uppercase tracking-wide">Gap Analysis</h3>
+          <h3 className="font-bold text-white text-sm uppercase tracking-wide">Gap Analysis</h3>
           {loading
             ? [1,2,3].map(i => <Skeleton key={i} className="h-20 rounded-xl" />)
             : !gaps || (gaps.gaps || []).length === 0
@@ -115,13 +115,13 @@ export default function ScoresPage({ session, scores: initialScores, onNext }) {
                 <div key={i} className="glass-light rounded-xl p-4 animate-fade-in-up"
                   style={{ animationDelay: `${i * 0.08}s` }}>
                   <div className="flex items-center justify-between mb-2">
-                    <p className="font-semibold text-sm">{g.skill}</p>
+                    <p className="font-bold text-sm text-white">{g.skill}</p>
                     <SeverityBadge severity={g.gap_severity || 'medium'} />
                   </div>
                   <div className="flex items-center gap-4 text-xs text-slate-400">
                     <span>Required: <strong className="text-white">L{g.jd_required_level}</strong></span>
-                    <span>Assessed: <strong className="text-purple-300">L{g.assessed_level}</strong></span>
-                    <span>Gap: <strong className="text-red-400">{g.jd_required_level - g.assessed_level} levels</strong></span>
+                    <span>Assessed: <strong className="text-purple-200">L{g.assessed_level}</strong></span>
+                    <span>Gap: <strong className="text-red-300">{g.jd_required_level - g.assessed_level} levels</strong></span>
                   </div>
                   {/* Gap bar */}
                   <div className="flex gap-1 mt-2">
