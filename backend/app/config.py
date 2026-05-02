@@ -21,11 +21,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://user:password@localhost:5432/skill_assessment"
     DB_ECHO: bool = False  # Log SQL queries
     
-    # AI/LLM Config
-    GEMINI_API_KEY: Optional[str] = None
-    OPENAI_API_KEY: Optional[str] = None    # kept for compatibility
-    ANTHROPIC_API_KEY: Optional[str] = None  # kept for compatibility
-    LLM_MODEL: str = "gemini-1.5-flash"
+    # AI/LLM Config (NVIDIA NIM)
+    NVIDIA_API_KEY: Optional[str] = None
+    LLM_MODEL: str = "nvidia/llama-3.3-nemotron-super-49b-v1"
     LLM_TEMPERATURE: float = 0.7
     LLM_MAX_TOKENS: int = 2048
     
@@ -47,10 +45,12 @@ class Settings(BaseSettings):
     # Logging
     LOG_LEVEL: str = "INFO"
     
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = True
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "case_sensitive": True,
+        "extra": "ignore",
+    }
 
 
 settings = Settings()

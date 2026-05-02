@@ -6,6 +6,13 @@ for document upload, conversational assessment, scoring, and learning plan gener
 
 Phase 2.5 Integration: Connected to AI Agents for assessment, scoring, gap analysis, and planning.
 """
+import os
+from pathlib import Path
+
+# Load .env before anything else so all services pick up env vars
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=True)
+
 import logging
 from contextlib import asynccontextmanager
 from typing import List, Optional
@@ -417,6 +424,7 @@ async def generate_learning_plan(request: LearningPlanRequest, background_tasks:
         learning_plan = await planning_agent.generate_learning_plan(
             skill_scores=skill_scores,
             jd_skills=session["jd_skills"],
+            candidate_name=session.get("candidate_name", "Candidate"),
             available_resources=[],
             weekly_hours=20.0
         )
@@ -479,36 +487,59 @@ async def get_gap_analysis(session_id: str):
     """
     try:
         logger.info(f"📊 Retrieving gap analysis for session: {session_id}")
-        
+
         if session_id not in session_store:
             raise HTTPException(status_code=404, detail="Session not found")
-        
+
         session = session_store[session_id]
-        
-        # Check if gap analysis was already computed during plan generation
+
+        # Use cached gap analysis if available (from /plan run)
         if "gap_analysis" in session:
             gap_analysis = session["gap_analysis"]
-            
-            # Format gaps from the analysis
-            all_gaps = (gap_analysis.critical_gaps + gap_analysis.high_gaps + 
-                       gap_analysis.medium_gaps + gap_analysis.low_gaps)
-            
-            logger.success(f"✅ Gap analysis retrieved - Overall readiness: {gap_analysis.overall_readiness:.2%}")
-            
-            return GapAnalysisResponse(
-                session_id=session_id,
-                gaps=all_gaps,
-                overall_readiness=gap_analysis.overall_readiness
+        else:
+            # Compute gap analysis on-demand from stored skill scores
+            skill_scores_dict = session.get("skill_scores", {})
+            if not skill_scores_dict:
+                return GapAnalysisResponse(session_id=session_id, gaps=[], overall_readiness=0.0)
+
+            skill_scores_list = [
+                s if isinstance(s, SkillScore) else SkillScore(**s)
+                for s in skill_scores_dict.values()
+            ]
+
+            gap_analysis_agent = GapAnalysisAgent()
+            gap_analysis = await gap_analysis_agent.analyze_skill_gaps(
+                skill_scores=skill_scores_list,
+                jd_skills=session["jd_skills"]
             )
-        
-        # If no cached gap analysis, return a placeholder for now
-        # This will be called if gap analysis is requested before learning plan generation
-        logger.info("  Gap analysis not yet computed (learning plan not run yet)")
-        
+            session["gap_analysis"] = gap_analysis
+
+        # Map internal gap dicts → GapAnalysis schema
+        from app.schemas import GapAnalysis
+        all_raw_gaps = (
+            gap_analysis.critical_gaps
+            + gap_analysis.high_gaps
+            + gap_analysis.medium_gaps
+            + gap_analysis.low_gaps
+        )
+
+        gaps_out = []
+        for rank, g in enumerate(all_raw_gaps, start=1):
+            gaps_out.append(GapAnalysis(
+                skill=g["skill"],
+                assessed_level=g["current_level"],
+                jd_required_level=g["required_level"],
+                gap_severity=g["priority"].lower(),   # "CRITICAL" → "critical"
+                priority_rank=rank,
+                upskilling_path=[],
+            ))
+
+        logger.success(f"✅ Gap analysis — {len(gaps_out)} gaps, readiness: {gap_analysis.overall_readiness:.1%}")
+
         return GapAnalysisResponse(
             session_id=session_id,
-            gaps=[],
-            overall_readiness=0.0
+            gaps=gaps_out,
+            overall_readiness=gap_analysis.overall_readiness
         )
         
     except HTTPException:

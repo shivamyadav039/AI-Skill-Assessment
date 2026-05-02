@@ -7,7 +7,7 @@ candidate proficiency on specific skills required by the Job Description.
 Features:
 - Adaptive difficulty progression (conceptual → scenario → applied)
 - Multi-turn conversation tracking
-- Claude AI integration for domain expertise
+- NVIDIA NIM AI integration for domain expertise
 - Confidence score extraction from responses
 - Graceful completion with fallback logic
 """
@@ -25,12 +25,11 @@ class AssessmentAgent:
     def __init__(self, api_key: Optional[str] = None):
         """
         Initialize the Assessment Agent.
-        
+
         Args:
-            api_key: Anthropic API key (defaults to ANTHROPIC_API_KEY env var)
+            api_key: NVIDIA API key (defaults to NVIDIA_API_KEY env var)
         """
-        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
-        self.model = "claude-3-5-sonnet-20241022"
+        self.api_key = api_key or os.getenv("NVIDIA_API_KEY")
         logger.info("🤖 Assessment Agent initialized")
     
     
@@ -143,32 +142,31 @@ Generate the next assessment question (difficulty: {difficulty})."""
     
     async def _call_claude(self, system_prompt: str, user_prompt: str) -> str:
         """
-        Call Claude API with retry logic.
-        
-        Phase 3: Uses real LLMService with caching, retries, and fallback.
-        
+        Call NVIDIA NIM API with retry logic.
+
         Args:
-            system_prompt: System instruction for Claude
+            system_prompt: System instruction
             user_prompt: User message/question
-            
+
         Returns:
-            Claude's response
+            Model's response
         """
         try:
             from app.services import call_claude
-            
+
             response = call_claude(
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
                 max_tokens=500,
                 temperature=0.7,
-                use_cache=True
+                use_cache=True,
+                retry_count=1,  # fail fast → per-turn fallback kicks in immediately
             )
-            logger.info(f"✅ Claude API call succeeded")
+            logger.info("✅ NVIDIA API call succeeded")
             return response
-            
+
         except Exception as e:
-            logger.error(f"Claude API error: {str(e)}")
+            logger.error(f"NVIDIA API error: {str(e)}")
             raise
     
     

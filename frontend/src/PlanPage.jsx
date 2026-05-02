@@ -131,13 +131,22 @@ export default function PlanPage({ session, onRestart }) {
                     {(m.resources || []).length > 0 && (
                       <div className="mb-2">
                         <p className="text-xs text-slate-200 font-semibold mb-1">📚 Resources</p>
-                        <div className="space-y-1">
-                          {m.resources.slice(0, 3).map((r, j) => (
-                            <div key={j} className="flex items-center gap-2 text-xs">
-                              <span className="text-slate-500">•</span>
-                              <span className="text-sm text-slate-100 font-medium">{typeof r === 'string' ? r : r.title || r.name || JSON.stringify(r)}</span>
-                            </div>
-                          ))}
+                        <div className="space-y-1.5">
+                          {m.resources.slice(0, 3).map((r, j) => {
+                            const rObj = typeof r === 'string' ? { title: r } : r;
+                            const typeIcon = { course: '🎓', book: '📖', project: '🛠️', practice: '💻', tutorial: '📝' }[rObj.resource_type] || '📌';
+                            return (
+                              <div key={j} className="flex items-start gap-2 text-xs">
+                                <span className="flex-shrink-0 mt-0.5">{typeIcon}</span>
+                                <div className="min-w-0">
+                                  <span className="text-sm text-slate-100 font-medium">{rObj.title}</span>
+                                  {rObj.estimated_duration_hours && (
+                                    <span className="ml-2 text-slate-500 text-xs">⏱ {rObj.estimated_duration_hours}h</span>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     )}

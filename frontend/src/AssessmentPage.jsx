@@ -193,7 +193,7 @@ export default function AssessmentPage({ session, onNext }) {
           {/* Input */}
           <div className="p-4 border-t border-slate-700/50">
             {done ? (
-              <button onClick={onNext}
+              <button onClick={() => onNext(scores)}
                 className="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white transition transform hover:scale-[1.01]">
                 📊 View My Results →
               </button>

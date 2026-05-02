@@ -11,8 +11,8 @@ psycopg2-binary==2.9.9
 alembic==1.13.0
 pgvector==0.2.4
 
-# AI/LLM
-google-generativeai>=0.7.0
+# AI/LLM — NVIDIA NIM (OpenAI-compatible SDK)
+openai>=1.0.0
 
 # NLP & Text Processing
 spacy==3.7.2

@@ -25,12 +25,11 @@ class ScoringAgent:
     def __init__(self, api_key: Optional[str] = None):
         """
         Initialize the Scoring Agent.
-        
+
         Args:
-            api_key: Anthropic API key (defaults to ANTHROPIC_API_KEY env var)
+            api_key: NVIDIA API key (defaults to NVIDIA_API_KEY env var)
         """
-        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
-        self.model = "claude-3-5-sonnet-20241022"
+        self.api_key = api_key or os.getenv("NVIDIA_API_KEY")
         logger.info("📊 Scoring Agent initialized")
     
     
@@ -291,67 +290,78 @@ REASONING: [your reasoning]"""
     
     async def _call_claude(self, system_prompt: str, user_prompt: str) -> str:
         """
-        Call Claude API for scoring.
-        
-        TODO: Implement actual Claude API call
-        For MVP, returns template response
+        Call NVIDIA NIM API for scoring.
         """
         try:
-            # TODO: Uncomment when anthropic client is available
-            # import anthropic
-            # client = anthropic.Anthropic(api_key=self.api_key)
-            # message = client.messages.create(
-            #     model=self.model,
-            #     max_tokens=500,
-            #     system=system_prompt,
-            #     messages=[{"role": "user", "content": user_prompt}]
-            # )
-            # return message.content[0].text
-            
-            # Placeholder for MVP
-            return """LEVEL: 3
-CONFIDENCE: 0.85
-EVIDENCE: practical-experience, problem-solving, technical-depth
-REASONING: Candidate demonstrated solid understanding with real-world project examples."""
-            
+            from app.services import call_claude
+
+            response = call_claude(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                max_tokens=500,
+                temperature=0.3,  # lower temp for deterministic scoring
+                use_cache=True,
+                retry_count=2,
+            )
+            logger.info("✅ NVIDIA API scoring call succeeded")
+            return response
+
         except Exception as e:
-            logger.error(f"Claude API error: {str(e)}")
+            logger.error(f"NVIDIA API error: {str(e)}")
             raise
     
     
     def _parse_score_response(self, response: str) -> Dict:
         """
-        Parse Claude's scoring response.
-        
-        Args:
-            response: Raw response from Claude
-            
-        Returns:
-            Dictionary with extracted score data
+        Parse LLM scoring response — handles varied output formats.
         """
+        import re
+
         data = {
             'level': 3,
             'confidence': 0.7,
             'evidence': ['experience', 'knowledge', 'potential'],
             'reasoning': 'Adequate proficiency demonstrated'
         }
-        
+
         try:
-            lines = response.strip().split('\n')
-            for line in lines:
-                if line.startswith('LEVEL:'):
-                    data['level'] = int(line.split(':')[1].strip())
-                elif line.startswith('CONFIDENCE:'):
-                    data['confidence'] = float(line.split(':')[1].strip())
-                elif line.startswith('EVIDENCE:'):
-                    evidence_str = line.split(':')[1].strip()
-                    data['evidence'] = [e.strip() for e in evidence_str.split(',')][:3]
-                elif line.startswith('REASONING:'):
-                    data['reasoning'] = line.split(':')[1].strip()
+            text = response.strip()
+
+            # Extract LEVEL
+            level_match = re.search(r'LEVEL\s*:\s*(\d)', text, re.IGNORECASE)
+            if level_match:
+                data['level'] = max(1, min(5, int(level_match.group(1))))
+
+            # Extract CONFIDENCE
+            conf_match = re.search(r'CONFIDENCE\s*:\s*(0?\.\d+)', text, re.IGNORECASE)
+            if conf_match:
+                data['confidence'] = max(0.0, min(1.0, float(conf_match.group(1))))
+
+            # Extract EVIDENCE
+            evidence_match = re.search(r'EVIDENCE\s*:\s*(.+)', text, re.IGNORECASE)
+            if evidence_match:
+                raw_ev = evidence_match.group(1)
+                tags = [e.strip().strip('[]"\'*') for e in raw_ev.split(',')]
+                # Convert long phrases to short kebab-case tags
+                clean_tags = []
+                for t in tags:
+                    if t:
+                        clean = t.lower().replace(' ', '-').strip('-*[]"\'')[:30]
+                        clean_tags.append(clean)
+                data['evidence'] = clean_tags[:3]
+
+            # Extract REASONING
+            reasoning_match = re.search(r'REASONING\s*:\s*(.+)', text, re.IGNORECASE)
+            if reasoning_match:
+                data['reasoning'] = reasoning_match.group(1).strip()
+
+            logger.debug(f"Parsed score: level={data['level']}, confidence={data['confidence']:.2f}")
+
         except Exception as e:
-            logger.warning(f"Could not parse score response: {str(e)}")
-        
+            logger.warning(f"Could not parse score response: {e}")
+
         return data
+
     
     
     def _int_to_proficiency_level(self, level: int) -> ProficiencyLevel:
