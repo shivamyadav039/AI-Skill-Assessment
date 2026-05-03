@@ -27,7 +27,7 @@ An AI agent that bridges the gap — automatically:
 
 | Layer | Technology |
 |-------|-----------|
-| **AI / LLM** | Google Gemini API (`gemini-1.5-flash`) |
+| **AI / LLM** | NVIDIA NIM API (`nvidia/llama-3.3-nemotron-super-49b-v1`) |
 | **Backend** | Python + FastAPI |
 | **Frontend** | React + Vite (Tailwind CSS) |
 | **NLP** | spaCy + sentence-transformers |
@@ -689,7 +689,7 @@ hackathon_deccan/
 ### Prerequisites
 - Python 3.10+
 - Node.js 18+
-- A [Gemini API Key](https://aistudio.google.com/app/apikey) (free)
+- An [NVIDIA NIM API Key](https://build.nvidia.com) (free tier available)
 
 ---
 
@@ -713,7 +713,7 @@ pip install -r requirements.txt
 
 # Configure environment
 cp .env.example .env
-# → Open .env and add your GEMINI_API_KEY
+# → Open .env and add your NVIDIA_API_KEY
 
 # Start backend server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -743,13 +743,13 @@ Frontend live at: **http://localhost:5173**
 
 ## 🔑 API Key Setup
 
-1. Go to [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-2. Create a free API key
+1. Go to [build.nvidia.com](https://build.nvidia.com)
+2. Sign up / log in and generate a free API key
 3. Open `backend/.env` and set:
 
 ```env
-GEMINI_API_KEY=AIza-your-key-here
-MODEL_NAME=gemini-1.5-flash
+NVIDIA_API_KEY=nvapi-your-key-here
+LLM_MODEL=nvidia/llama-3.3-nemotron-super-49b-v1
 ```
 
 ---

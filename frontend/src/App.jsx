@@ -129,7 +129,8 @@ export default function App() {
   const [health, setHealth] = useState(null);
 
   useEffect(() => {
-    fetch('/health')
+    const backend = import.meta.env.VITE_API_URL || '';
+    fetch(`${backend}/health`)
       .then(r => r.json())
       .then(() => setHealth(true))
       .catch(() => setHealth(false));
